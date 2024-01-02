@@ -30,12 +30,12 @@ def load_ged(dataset_name='AIDS', file_name='pair_ged.json'):
     
     return ged_dict
 
-a, b = load_all_graphs('AIDS')
-print(b[0]['g_num'])
+# a, b = load_all_graphs('AIDS')
+# print(b[0]['g_num'])
 
-c, d = load_labels('AIDS')
-print(c)
-# print(d[0])
+# c, d = load_labels('AIDS')
+# print(c)
+# # print(d[0])
 
-e = load_ged()
-print(e)
+# e = load_ged()
+# print(e)
