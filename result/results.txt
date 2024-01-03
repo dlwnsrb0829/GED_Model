@@ -1,0 +1,36 @@
+## Training
+```
+model_name	dataset	graph_set	current_epoch	training_time(s/epoch)	training_loss(1000x)
+model	AIDS	train	1	9426.732731580734	53.987
+```
+
+## Training
+```
+model_name	dataset	graph_set	current_epoch	training_time(s/epoch)	training_loss(1000x)
+model	AIDS	train	2	9631.955199480057	30.302
+```
+
+## Training
+```
+model_name	dataset	graph_set	current_epoch	training_time(s/epoch)	training_loss(1000x)
+model	AIDS	train	3	9651.84200334549	27.538
+```
+
+## Training
+```
+model_name	dataset	graph_set	current_epoch	training_time(s/epoch)	training_loss(1000x)
+model	AIDS	train	4	9633.627353668213	25.141
+```
+
+## Training
+```
+model_name	dataset	graph_set	current_epoch	training_time(s/epoch)	training_loss(1000x)
+model	AIDS	train	5	9656.49457526207	23.604
+```
+
+## Training
+```
+model_name	dataset	graph_set	current_epoch	training_time(s/epoch)	training_loss(1000x)
+model	AIDS	train	6	9650.706262111664	22.959
+```
+

@@ -6,7 +6,7 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 from torch_geometric.nn.conv import GCNConv, GINConv
 from math import exp
-from layers import AttentionModule
+from layers import AttentionModule, TensorNetworkModule
 # from GedMatrix import GedMatrixModule
 # from layers import AttentionModule, TensorNetworkModule
 
@@ -44,7 +44,7 @@ class GedGNN(torch.nn.Module):
         self.fully_cnnected_3 = nn.Linear(32, 1, bias=True)
         
         self.attention1 = AttentionModule()
-        # self.tensor_network1 = TensorNetworkModule()
+        self.tensor_network1 = TensorNetworkModule()
 
         self.fully_connected_first1 = torch.nn.Linear(16, 16)
         self.fully_connected_second1 = torch.nn.Linear(16, 8)
