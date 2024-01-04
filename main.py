@@ -8,7 +8,7 @@ def main():
         trainer.cur_epoch = epoch
         trainer.fit()
         trainer.save(epoch + 1)
-        # trainer.score('test')
+        trainer.score('test')
         
 #     trainer.load(20)
 #     trainer.score('test')

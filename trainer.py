@@ -32,8 +32,8 @@ class Trainer(object):
         ged_dict = load_ged(dataset_name=dataset_name)
         self.ged_dict = ged_dict
         print("Load ged dict.")
-        self.graphs = self.graphs[:10000]
-        self.features = self.features[:10000]
+        self.graphs = self.graphs[:6500]
+        self.features = self.features[:6500]
         
     def transfer_data_to_torch(self):
         t1 = time.time()
@@ -88,7 +88,7 @@ class Trainer(object):
         self.testing_graphs = []
         # print(self.ged_dict)
         # exit()
-        train_num = 8000
+        train_num = 4500
         test_num = len(self.graphs)
 
         for i in range(train_num):
@@ -97,8 +97,8 @@ class Trainer(object):
                 if tmp is not None:
                     self.training_graphs.append(tmp)
 
-        for i in range(8000, 10000):
-            for j in range(i, 10000):
+        for i in range(4500, 6500):
+            for j in range(i, 6500):
                 tmp = self.check_pair(i, j)
                 if tmp is not None:
                     self.testing_graphs.append(tmp)
@@ -208,6 +208,59 @@ class Trainer(object):
         new_data["gt_ged"] = torch.tensor(gt_ged)
 
         return new_data
+    
+    def score(self, testing_graph_set='test', test_k=0):
+        print("\n\nModel evaluation on {} set.\n".format(testing_graph_set))
+        testing_graphs = self.testing_graphs
+        self.model.eval()
+
+        num = 0  # total testing number
+        time_usage = []
+        mse = []  # score mse
+        mae = []  # ged mae
+        num_acc = 0  # the number of exact prediction (pre_ged == gt_ged)
+        num_fea = 0  # the number of feasible prediction (pre_ged >= gt_ged)
+
+        for graph in tqdm(testing_graphs, file=sys.stdout):
+            pre = []
+            gt = []
+            t1 = time.time()
+            data = self.pack_graph_pair(graph)
+            target, gt_ged = data["target"].item(), data["gt_ged"]
+            pcost, cost = self.model(data)
+            round_pre_ged = round(pcost.item())
+            num += 1
+            mse.append((cost.item() - target) ** 2)
+            mae.append(abs(round_pre_ged - gt_ged))
+            if round_pre_ged == gt_ged:
+                num_acc += 1
+                num_fea += 1
+            elif round_pre_ged > gt_ged:
+                num_fea += 1
+            t2 = time.time()
+            time_usage.append(t2 - t1)
+
+        time_usage = round(np.mean(time_usage), 3)
+        mse = round(np.mean(mse)*1000, 3)
+        mae = round(np.mean(mae), 3)
+        acc = round(num_acc / num, 3)
+        fea = round(num_fea / num, 3)
+        self.results.append(('model_name', 'dataset', 'graph_set', '#testing_pairs', 'time_usage(s/100p)', 'mse', 'mae', 'acc',
+                             'fea'))
+        self.results.append(('model', 'ADIS', testing_graph_set, num, time_usage, mse, mae, acc,
+                             fea))
+        print(*self.results[-2], sep='\t')
+        print(*self.results[-1], sep='\t')
+        
+        with open('result/' + 'results.txt', 'a') as f:
+            if test_k == 0:
+                print("## Testing", file=f)
+            else:
+                print("## Post-processing", file=f)
+            print("```", file=f)
+            print(*self.results[-2], sep='\t', file=f)
+            print(*self.results[-1], sep='\t', file=f)
+            print("```\n", file=f)
 
     def save(self, epoch):
         torch.save(self.model.state_dict(), "model_save/" + "ADIS" + '_' + str(epoch))
